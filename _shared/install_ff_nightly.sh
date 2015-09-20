@@ -1,28 +1,36 @@
 #!/bin/bash
 
-echo
-echo Downloading latest Nightly...
 echo  
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+ROOT_URL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest"
 
-
-function install_ff_linux {
-    echo "install linux"
-    wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest/linux-x86_64/en-US/firefox-38.0.5.tar.bz2
-    tar -xjvf *.bz2 -C $HOME/bin
-
+function download {
+    URL="$1"
+    FILE=`curl -s "$URL/" | grep 'href' | sed 's/.*href="//' | sed 's/".*//' | grep '^[a-zA-Z].*' ` 
+    echo "Downloading latest $OSTYPE Nightly: $FILE"
+    curl -s -O $URL/$FILE
 }
 
+function install_ff_linux {
+    PATH_OS="$ROOT_URL/linux-x86_64/en-US"
+    echo "install linux"
+    echo $PATH_OS
+    download $PATH_OS
+    
+    # launch here
+    mkdir -p $HOME/bin
+    rm -rf  $HOME/bin/*f
+    #cp ./$FILE  $HOME/bin/
+    tar xvjf ./$FILE -C $HOME/bin
+    rm -f $FILE 
+    $HOME/bin/firefox/firefox
+}
 
 function install_ff_darwin {
-
-    # OSX
-    rm -rf $DIR'/LatestNightly.dmg'
-
-
-    LATEST_DMG=$(curl -s ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-central/ | fgrep en-US.mac.dmg | awk '{print $9}'
-    )
-    curl -# -C - -o $DIR'/LatestNightly.dmg' "ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-central/$LATEST_DMG"
+    PATH_OS="$ROOT_URL/mac/en-US"
+    echo "install OSX"
+    echo $PATH_OS
+    download $PATH_OS
     open $DIR'/LatestNightly.dmg'
 
     # TODO: Replace with monitor for download complete
@@ -32,21 +40,21 @@ function install_ff_darwin {
     sleep 20
     echo mounting Firefox...
     cd /Volumes/Nightly/FirefoxNightly.app/Contents/MacOS
-npm install
-
+    npm install
 }
 
+
 echo "----------------------------------"
-echo "INSTALL OS-SPECIFIC: $OSTYPE"
+echo "INSTALL FIREFOX: $OSTYPE"
 echo "----------------------------------"
 echo
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    install_ff_linux
+    install_ff_linux 
 
 elif [[ "$OSTYPE" == "darwin" ]]; then
     install_ff_darwin
 
 else
-    echo "don't recognize OS!"
+    echo "don't recognize OS... ABORTING!"
     exit
 fi
