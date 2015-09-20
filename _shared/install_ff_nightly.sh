@@ -13,14 +13,12 @@ function download {
 
 function install_ff_linux {
     PATH_OS="$ROOT_URL/linux-x86_64/en-US"
-    echo "install linux"
     echo $PATH_OS
     download $PATH_OS
     
     # launch here
     mkdir -p $HOME/bin
     rm -rf  $HOME/bin/*f
-    #cp ./$FILE  $HOME/bin/
     tar xvjf ./$FILE -C $HOME/bin
     rm -f $FILE 
     $HOME/bin/firefox/firefox
@@ -28,8 +26,6 @@ function install_ff_linux {
 
 function install_ff_darwin {
     PATH_OS="$ROOT_URL/mac/en-US"
-    echo "install OSX"
-    echo $PATH_OS
     download $PATH_OS
     open $DIR'/LatestNightly.dmg'
 
