@@ -1,28 +1,56 @@
 #!/bin/bash
 
-echo
-echo Downloading latest Nightly...
 echo  
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+ROOT_URL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest"
 
-# OSX
-rm -rf $DIR'/LatestNightly.dmg'
+function download {
+    URL="$1"
+    FILE=`curl -s "$URL/" | grep 'href' | sed 's/.*href="//' | sed 's/".*//' | grep '^[a-zA-Z].*' ` 
+    echo "Downloading latest $OSTYPE Nightly: $FILE"
+    curl -s -O $URL/$FILE
+}
+
+function install_ff_linux {
+    PATH_OS="$ROOT_URL/linux-x86_64/en-US"
+    echo $PATH_OS
+    download $PATH_OS
+    
+    # launch here
+    mkdir -p $HOME/bin
+    rm -rf  $HOME/bin/*f
+    tar xvjf ./$FILE -C $HOME/bin
+    rm -f $FILE 
+    $HOME/bin/firefox/firefox
+}
+
+function install_ff_darwin {
+    PATH_OS="$ROOT_URL/mac/en-US"
+    download $PATH_OS
+    open $DIR'/LatestNightly.dmg'
+
+    # TODO: Replace with monitor for download complete
+    echo
+    echo Waiting 20 seconds for disk image to be mounted...
+    echo
+    sleep 20
+    echo mounting Firefox...
+    cd /Volumes/Nightly/FirefoxNightly.app/Contents/MacOS
+    npm install
+}
 
 
-LATEST_DMG=$(curl -s ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-central/ | fgrep en-US.mac.dmg | awk '{print $9}'
-)
-curl -# -C - -o $DIR'/LatestNightly.dmg' "ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-central/$LATEST_DMG"
-open $DIR'/LatestNightly.dmg'
-
-# TODO: Download and install latest Firefox browser for Ubuntu.
-# wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest/linux-x86_64/en-US/firefox-38.0.5.tar.bz2
-# tar -xjvf *.bz2 -C /home/ubuntu
-
-# TODO: Replace with monitor for download complete
+echo "----------------------------------"
+echo "INSTALL FIREFOX: $OSTYPE"
+echo "----------------------------------"
 echo
-echo Waiting 20 seconds for disk image to be mounted...
-echo
-sleep 20
-echo mounting Firefox...
-cd /Volumes/Nightly/FirefoxNightly.app/Contents/MacOS
-npm install
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    install_ff_linux 
+
+elif [[ "$OSTYPE" == "darwin" ]]; then
+    install_ff_darwin
+
+else
+    echo "don't recognize OS... ABORTING!"
+    exit
+fi
