@@ -20,9 +20,7 @@ class TestBrowserCallCaller(MarionetteTestCase):
 
 	def setUp(self):
 		MarionetteTestCase.setUp(self)
-
 		self.marionette.enforce_gecko_prefs(FIREFOX_PREFERENCES)
-
 		self.marionette.set_context("chrome")
 
 	def switch_to_panel(self):
@@ -67,19 +65,12 @@ class TestBrowserCallCaller(MarionetteTestCase):
 
 	def local_get_and_verify_room_url(self):
 		self.switch_to_chatbox()
-		
 		# should wait for char box to show instead of sleeping once
 		time.sleep(5)
-
 		button = self.wait_for_element_displayed(By.CLASS_NAME, "btn-copy")
-
 		self.wait_for_element_enabled(button)
-
 		button.click()
-
-
 		room_url = pyperclip.paste()
-
 		self.assertIn(urlparse.urlparse(room_url).scheme, ['http', 'https'],
 						"room URL returned by server: '" + room_url +
 						"' has invalid scheme")

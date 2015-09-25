@@ -3,11 +3,16 @@
 *.py[cod]
 *.sw[op]
 *.dmg
+*.zip
+*.bz2
 
 .Python
+firefox/
 build/
 dist/
 sdist/
+marionette_env/
+tests/
 *.egg-info/
 *.egg
 *.tar*
