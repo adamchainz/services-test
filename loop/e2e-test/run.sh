@@ -1,28 +1,18 @@
-echo
-echo "-------------------"
-echo "SETUP"
-echo "-------------------"
-echo
+echo $PWD
+PATH_MARIONETTE="$PWD/tests/marionette/marionette"
+PATH_FIREFOX="/Applications/Firefox.app/Contents/MacOS"
+PATH_INI="$PWD/caller_case.ini"
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-cd $DIR
+# TODO: 
+# [1]. download Firefox
+# [2]. download common.tests.zip
+# [3]. copy in STAGE prefs
+# [4]. mkdir tests
+# [5]. unzip common.tests.zip in ./tests dir
+# -- look at firefox-ui-tests for setup examples (for handling ff downloads, prefs, etc.)
 
-npm install
+virtualenv marionette_env
+. $PWD/marionette_env/bin/activate 
+sudo pip install marionette_client six pexpect pyperclip
 
-../../_shared/install_ff_nightly.sh
-
-if [ -z "$RUNTIME" ]; then
-  #RUNTIME=/Applications/Firefox.app/Contents/MacOS/firefox-bin
-  RUNTIME=/Volumes/FirefoxNightly.app/Contents/MacOS/firefox-bin
-fi
-
-echo
-echo "-------------------"
-echo "RUN TEST"
-echo "-------------------"
-echo
-node_modules/.bin/marionette-mocha \
-  --host marionette-firefox-host \
-  --runtime $RUNTIME \
-  --timeout 6000s \
-  tests/loop_signup.js
+python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
