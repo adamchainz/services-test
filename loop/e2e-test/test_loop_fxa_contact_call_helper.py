@@ -14,7 +14,7 @@ from config import *
 import time
 from six.moves import input
 
-class TestBrowserCallRecipient(MarionetteTestCase):
+class TestLoopFxaContactCallHelper(MarionetteTestCase):
 
 	def setUp(self):
 		MarionetteTestCase.setUp(self)

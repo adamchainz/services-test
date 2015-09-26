@@ -16,7 +16,7 @@ import time
 from six.moves import input
 
 
-class TestBrowserCallCaller(MarionetteTestCase):
+class TestLoopUrlCall(MarionetteTestCase):
 
 	def setUp(self):
 		MarionetteTestCase.setUp(self)
