@@ -1,7 +1,8 @@
 #!/bin/bash
 
-PATH_MARIONETTE="$PWD/tests/marionette/marionette"
-VENV_BIN="$PWD/marionette_env/bin"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+PATH_MARIONETTE="$DIR/tests/marionette/marionette"
+VENV_BIN="$DIR/marionette_env/bin"
 if [ -z "$1" ]; then
    # we'll do this by default, but if no arg supplied
    # we could instead run them all
@@ -9,7 +10,7 @@ if [ -z "$1" ]; then
 else
    TEST_NAME="$1"
 fi
-PATH_INI="$PWD/$TEST_NAME.ini"
+PATH_INI="$DIR/$TEST_NAME.ini"
 
 echo
 echo "------------------------------------------------"
@@ -18,7 +19,7 @@ echo "------------------------------------------------"
 echo
 
 virtualenv marionette_env
-. $PWD/marionette_env/bin/activate 
+. $DIR/marionette_env/bin/activate 
 $VENV_BIN/pip install marionette_client six pexpect pyperclip mozdownload
 
 echo "----------------------------------"
@@ -28,7 +29,7 @@ echo
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     echo "SET FIREFOX BIN PATH"
-    PATH_FIREFOX="$PWD/firefox"
+    PATH_FIREFOX="$DIR/firefox"
     echo $PATH_FIREFOX
 
     echo "INSTALL LINUX DEPS"
@@ -39,7 +40,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     echo "CLEANUP"
     rm -rf firefox
-    tar xjfv *.bz2
+    tar xjf *.bz2
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "SET FIREFOX BIN PATH"
@@ -62,7 +63,7 @@ rm -rf tests;
 mkdir tests
 
 cp *common.tests.zip tests
-unzip  *common.tests.zip -d tests
+unzip -q *common.tests.zip -d tests
 
 echo "CLEANUP"
 rm *common.tests.zip
@@ -72,6 +73,7 @@ echo "------------------------------------------------"
 echo "RUN TEST"
 echo "------------------------------------------------"
 echo
+
 
 $VENV_BIN/python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
 #python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
