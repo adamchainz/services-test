@@ -11,6 +11,8 @@ FIREFOX_PREFERENCES = {
     "media.volume_scale": "0",
     "loop.gettingStarted.seen": True,
     "loop.seenToS": "seen",
+    "loop.fxa_oauth.profile": "{\"email\":\"tryloopprod@mailinator.com\",\"uid\":\"246e2ec1ca134e0fa51776ff09a49ab9\"}",
+    "loop.fxa_oauth.tokendata": "{\"token_type\":\"bearer\",\"access_token\":\"bca8d697ac066445ae91da4a0d11c58a9b2da83517acad9ef91387e6b57188eb\",\"scope\":\"profile\"}",
 
     # this dialog is fragile, and likely to introduce intermittent failures
     "media.navigator.permission.disabled": True,

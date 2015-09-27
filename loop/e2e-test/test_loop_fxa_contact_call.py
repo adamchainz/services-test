@@ -21,7 +21,11 @@ class TestLoopFxaContactCall(MarionetteTestCase):
     def setUp(self):
         MarionetteTestCase.setUp(self)
         self.marionette.enforce_gecko_prefs(FIREFOX_PREFERENCES)
-        self.marionette.set_context("chrome")
+        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
+
+    def debug_show_content(self, context):
+        self.marionette.set_context(context)
+        print(self.marionette.page_source)
 
     def switch_to_panel(self):
         hello_button = self.marionette.find_element(By.ID, "loop-button")
@@ -30,15 +34,8 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         frame = self.marionette.find_element(By.ID, "loop-panel-iframe")
         self.marionette.switch_to_frame(frame)
 
-    def local_fxa_sign_in():
-
-        #("button", {className: "btn btn-info sign-in-request-button",
-        button = self.wait_for_element_displayed(By.CLASS_NAME, "sign-in-request-button")
-        button.click()
-
     def switch_to_chatbox(self):
-
-        self.marionette.set_context("chrome")
+        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
         self.marionette.switch_to_frame()
 
         chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
@@ -61,17 +58,54 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         Wait(self.marionette, timeout) \
             .until(lambda e: element.is_enabled(), message="Timed out waiting for element to be enabled")
 
+    def local_fxa_sign_in(self):
+        button = self.marionette.find_element(By.CLASS_NAME, "sign-in-request-button")
+        #button = self.marionette.find_element(By.ID, "settings_menu_item_signin")
+        self.wait_for_element_enabled(button, 120)
+        button.click()
+
+    def local_go_to_link(self):
+        # we need to set_context to 'content' to navigate
+        self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
+        self.marionette.navigate('https://www.sgi-usa.org')
+
+    def local_fxa_enter_password(self):
+        original_window = self.marionette.current_window_handle
+        for handle in self.marionette.window_handles:
+            print 'handle: {0}'.format(handle)
+        #    if handle != original_window:
+        #        print 'switching to handle: {0}'.format(handle)
+        #        self.marionette.switch_to_window(handle)
+                
+        print('handle: {0}'.format(handle))
+
+        #time.sleep(20)
+        time.sleep(3)
+        self.marionette.switch_to_window(15)
+        self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
+        self.marionette.switch_to_frame()
+        time.sleep(3)
+
+        input_box = self.marionette.find_element(By.CLASS_NAME, "password")
+        self.wait_for_element_enabled(input_box, 120)
+        time.sleep(10)
+        #input_box.send_keys("tryloopprod")
+        self.marionette.find_element(By.CLASS_NAME, "password").send_keys("tryloopprod")
+
+    def local_fxa_start_a_conversation(self):
+        # contacts.js
+        #onClick: this.handleAction.bind(null, "video-call")}),
+        pass
+
     def local_start_a_conversation(self):
         button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
-
         self.wait_for_element_enabled(button, 120)
-
         button.click()
 
     def local_get_and_verify_room_url(self):
         self.switch_to_chatbox()
         # should wait for char box to show instead of sleeping once
-        time.sleep(5)
+        time.sleep(3)
         button = self.wait_for_element_displayed(By.CLASS_NAME, "btn-copy")
         self.wait_for_element_enabled(button)
         button.click()
@@ -92,7 +126,7 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         :return: the value of the given sub-expression as evaluated in the
         chatbox content window
         """
-        self.marionette.set_context("chrome")
+        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
         self.marionette.switch_to_frame()
 
         # XXX should be using wait_for_element_displayed, but need to wait
@@ -134,17 +168,13 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
     def test_loop_fxa_contact_call(self):
         self.switch_to_panel()
-        time.sleep(5)
+        time.sleep(3)
         print('look for sign in')
         self.local_fxa_sign_in()
-        time.sleep(5)
-
-        #self.local_start_a_conversation()
-        #self.local_check_media_start_time_uninitialized() None - -1
-
-        #room_url = self.local_get_and_verify_room_url()
-        #print("The room url is: " + room_url)
-        #joined = input("Give a GO sign")
+        #self.switch_to_panel()
+        time.sleep(3)
+        self.local_fxa_enter_password()
+        time.sleep(3)
 
     def tearDown(self):
         MarionetteTestCase.tearDown(self)

@@ -3,7 +3,9 @@
 SKIP_INSTALL="$2"
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 PATH_MARIONETTE="$DIR/tests/marionette/marionette"
-VENV_BIN="$DIR/marionette_env/bin"
+VENV_NAME="marionette_env"
+#VENV_BIN="$DIR/marionette_env/bin"
+VENV_BIN="$DIR/$VENV_NAME/bin"
 
 if [ -z "$1" ]; then
    # we'll do this by default, but if no arg supplied
@@ -15,24 +17,32 @@ fi
 PATH_INI="$DIR/$TEST_NAME.ini"
 
 echo
-echo "------------------------------------------------"
-echo "VIRTUALENV"
-echo "------------------------------------------------"
-echo
+echo "================================================"
+echo "TEST: $TEST_NAME"
+echo "================================================"
 
+echo
+echo "------------------------------------"
+echo "VIRTUALENV"
+echo "------------------------------------"
+echo
 if [ -z "$SKIP_INSTALL" ]; then
-    virtualenv marionette_env
+    #virtualenv marionette_env
+    virtualenv "$VENV_NAME"
 fi
-. $DIR/marionette_env/bin/activate 
+echo "virtualenv is: $DIR/$VENV_NAME"
+
+#. $DIR/marionette_env/bin/activate 
+. $DIR/$VENV_NAME/bin/activate 
 
 if [ -z "$SKIP_INSTALL" ]; then
     $VENV_BIN/pip install marionette_client six pexpect pyperclip mozdownload
 fi
 
 echo
-echo "----------------------------------"
+echo "------------------------------------"
 echo "INSTALL FIREFOX: OS=$OSTYPE"
-echo "----------------------------------"
+echo "------------------------------------"
 echo
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -56,7 +66,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "SET FIREFOX BIN PATH"
     # TODO: mount new dmg, hard-coding to existing for now
-    PATH_FIREFOX="/Applications/Firefox.app/Contents/MacOS"
+    #PATH_FIREFOX="/Applications/Firefox.app/Contents/MacOS"
+    PATH_FIREFOX="/Applications/FirefoxNN.app/Contents/MacOS"
     echo $PATH_FIREFOX
 else
     echo "don't recognize OS... ABORTING!"
@@ -65,9 +76,9 @@ fi
 
 if [ -z "$SKIP_INSTALL" ]; then
     echo
-    echo "------------------------------------------------"
+echo "------------------------------------"
     echo "DOWNLOAD MARIONETTE TESTS"
-    echo "------------------------------------------------"
+echo "------------------------------------"
     echo
 
     $VENV_BIN/mozdownload --type=daily --extension=common.tests.zip
@@ -82,11 +93,12 @@ if [ -z "$SKIP_INSTALL" ]; then
 fi
 
 echo
-echo "------------------------------------------------"
+echo "------------------------------------"
 echo "RUN TEST"
-echo "------------------------------------------------"
+echo "------------------------------------"
 echo
 
-
-#$VENV_BIN/python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+# https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
+# http://mozbase.readthedocs.org/en/latest/mozprofile.html
 python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+#$PATH_FIREFOX/firefox -P loop-host-MASTER &
