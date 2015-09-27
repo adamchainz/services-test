@@ -1,4 +1,4 @@
-LOOP_SERVER_URL = "https://loop.stage.mozaws.net"
+LOOP_SERVER_URL = "https://loop.services.mozilla.com"
 FIREFOX_PREFERENCES = {
     "loop.server": LOOP_SERVER_URL + "/v0",
     "browser.dom.window.dump.enabled": True,

@@ -70,6 +70,8 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         self.marionette.navigate('https://www.sgi-usa.org')
 
     def local_fxa_enter_password(self):
+        self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
+        self.marionette.switch_to_frame()
         original_window = self.marionette.current_window_handle
         for handle in self.marionette.window_handles:
             print 'handle: {0}'.format(handle)
@@ -77,20 +79,22 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         #        print 'switching to handle: {0}'.format(handle)
         #        self.marionette.switch_to_window(handle)
                 
-        print('handle: {0}'.format(handle))
 
-        #time.sleep(20)
-        time.sleep(3)
-        self.marionette.switch_to_window(15)
-        self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
-        self.marionette.switch_to_frame()
+        # this is a hack - we're assuming window_handles is either
+        # original or NOT.  we don't want the original, so we want
+        # the other one - FxA login window.
+        self.marionette.switch_to_window(handle)
+        # why do we need this?
         time.sleep(3)
 
-        input_box = self.marionette.find_element(By.CLASS_NAME, "password")
+        input_box = self.marionette.find_element(By.ID, "password")
         self.wait_for_element_enabled(input_box, 120)
-        time.sleep(10)
-        #input_box.send_keys("tryloopprod")
-        self.marionette.find_element(By.CLASS_NAME, "password").send_keys("tryloopprod")
+        input_box.send_keys("tryloopprod")
+        time.sleep(3)
+        
+        button = self.marionette.find_element(By.ID, "submit-btn")
+        self.wait_for_element_enabled(button, 120)
+        button.click()
 
     def local_fxa_start_a_conversation(self):
         # contacts.js
@@ -169,9 +173,7 @@ class TestLoopFxaContactCall(MarionetteTestCase):
     def test_loop_fxa_contact_call(self):
         self.switch_to_panel()
         time.sleep(3)
-        print('look for sign in')
         self.local_fxa_sign_in()
-        #self.switch_to_panel()
         time.sleep(3)
         self.local_fxa_enter_password()
         time.sleep(3)
