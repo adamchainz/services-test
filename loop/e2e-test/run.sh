@@ -1,8 +1,10 @@
 #!/bin/bash
 
+SKIP_INSTALL="$2"
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 PATH_MARIONETTE="$DIR/tests/marionette/marionette"
 VENV_BIN="$DIR/marionette_env/bin"
+
 if [ -z "$1" ]; then
    # we'll do this by default, but if no arg supplied
    # we could instead run them all
@@ -18,29 +20,38 @@ echo "VIRTUALENV"
 echo "------------------------------------------------"
 echo
 
-virtualenv marionette_env
+if [ -z "$SKIP_INSTALL" ]; then
+    virtualenv marionette_env
+fi
 . $DIR/marionette_env/bin/activate 
-$VENV_BIN/pip install marionette_client six pexpect pyperclip mozdownload
 
+if [ -z "$SKIP_INSTALL" ]; then
+    $VENV_BIN/pip install marionette_client six pexpect pyperclip mozdownload
+fi
+
+echo
 echo "----------------------------------"
-echo "INSTALL FIREFOX: $OSTYPE"
+echo "INSTALL FIREFOX: OS=$OSTYPE"
 echo "----------------------------------"
 echo
+
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     echo "SET FIREFOX BIN PATH"
     PATH_FIREFOX="$DIR/firefox"
     echo $PATH_FIREFOX
 
-    echo "INSTALL LINUX DEPS"
-    sudo apt-get install xclip
+    if [ -z "$SKIP_INSTALL" ]; then
+        echo "INSTALL LINUX DEPS"
+        sudo apt-get install xclip
 
-    echo "DOWNLOAD FIREFOX"
-    $VENV_BIN/mozdownload --version=latest
+	echo "DOWNLOAD FIREFOX"
+	$VENV_BIN/mozdownload --version=latest
 
-    echo "CLEANUP"
-    rm -rf firefox
-    tar xjf *.bz2
+	echo "CLEANUP"
+	rm -rf firefox
+	tar xjf *.bz2
+    fi
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "SET FIREFOX BIN PATH"
@@ -52,21 +63,23 @@ else
     exit
 fi
 
-echo
-echo "------------------------------------------------"
-echo "DOWNLOAD MARIONETTE TESTS"
-echo "------------------------------------------------"
-echo
+if [ -z "$SKIP_INSTALL" ]; then
+    echo
+    echo "------------------------------------------------"
+    echo "DOWNLOAD MARIONETTE TESTS"
+    echo "------------------------------------------------"
+    echo
 
-$VENV_BIN/mozdownload --type=daily --extension=common.tests.zip
-rm -rf tests;
-mkdir tests
+    $VENV_BIN/mozdownload --type=daily --extension=common.tests.zip
+    rm -rf tests;
+    mkdir tests
 
-cp *common.tests.zip tests
-unzip -q *common.tests.zip -d tests
+    cp *common.tests.zip tests
+    unzip -q *common.tests.zip -d tests
 
-echo "CLEANUP"
-rm *common.tests.zip
+    echo "CLEANUP"
+    rm *common.tests.zip
+fi
 
 echo
 echo "------------------------------------------------"
@@ -75,5 +88,5 @@ echo "------------------------------------------------"
 echo
 
 
-$VENV_BIN/python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
-#python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+#$VENV_BIN/python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
