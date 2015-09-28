@@ -97,6 +97,10 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         button.click()
 
     def local_fxa_start_a_conversation(self):
+    #def local_start_a_conversation(self):
+        button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
+        self.wait_for_element_enabled(button, 120)
+        button.click()
         # contacts.js
         #onClick: this.handleAction.bind(null, "video-call")}),
         pass
@@ -176,6 +180,8 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         self.local_fxa_sign_in()
         time.sleep(3)
         self.local_fxa_enter_password()
+        time.sleep(3)
+        self.local_fxa_start_a_conversation()
         time.sleep(3)
 
     def tearDown(self):
