@@ -29,21 +29,25 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
     def switch_to_panel(self):
         self.marionette.set_context(self.marionette.CONTEXT_CHROME)
+        self.marionette.switch_to_frame()
         hello_button = self.marionette.find_element(By.ID, "loop-button")
         hello_button.click()
 
         frame = self.marionette.find_element(By.ID, "loop-panel-iframe")
         self.marionette.switch_to_frame(frame)
 
+    """
     def switch_to_panel2(self):
-        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
 
-        # NEXT: loop-button not found
+        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
+        self.marionette.switch_to_frame()
+
         hello_button = self.marionette.find_element(By.ID, "loop-button")
         hello_button.click()
-
         frame = self.marionette.find_element(By.ID, "loop-panel-iframe")
         self.marionette.switch_to_frame(frame)
+    """
+
 
     def switch_to_chatbox(self):
         self.marionette.set_context(self.marionette.CONTEXT_CHROME)
@@ -71,14 +75,13 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
     def local_fxa_sign_in(self):
         button = self.marionette.find_element(By.CLASS_NAME, "sign-in-request-button")
-        #button = self.marionette.find_element(By.ID, "settings_menu_item_signin")
         self.wait_for_element_enabled(button, 120)
         button.click()
 
-    def local_go_to_link(self):
+    def local_go_to_link(self, url):
         # we need to set_context to 'content' to navigate
         self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
-        self.marionette.navigate('https://www.sgi-usa.org')
+        self.marionette.navigate(url)
 
     def local_fxa_enter_password(self):
         self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
@@ -108,7 +111,13 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         button.click()
 
     def local_fxa_start_a_conversation(self):
+
+        button = self.marionette.find_element(By.XPATH, './/*[@data-tab-name="contacts"]')
+        self.wait_for_element_enabled(button, 120)
+        button.click()
+        """
         self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
+
         self.marionette.switch_to_frame()
         time.sleep(5)
         print('starting a conversation...............')
@@ -118,10 +127,9 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
         print('conversation button found...............')
         self.wait_for_element_enabled(button, 120)
-        button.click()
         # contacts.js
         #onClick: this.handleAction.bind(null, "video-call")}),
-        pass
+        """
 
     def local_start_a_conversation(self):
         button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
@@ -193,14 +201,22 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         )
 
     def test_loop_fxa_contact_call(self):
+
+        # CHATBOX
         self.switch_to_panel()
         time.sleep(3)
         self.local_fxa_sign_in()
         time.sleep(3)
+
+        # BROWSER
         self.local_fxa_enter_password()
+        print('enter pw now....')
         time.sleep(6)
-        self.switch_to_panel2()
+        
+        #self.switch_to_panel2()
+        self.switch_to_panel()
         time.sleep(6)
+        #self.local_start_a_conversation()
         self.local_fxa_start_a_conversation()
         time.sleep(3)
         #self.local_fxa_sign_in()
