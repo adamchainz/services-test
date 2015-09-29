@@ -81,5 +81,7 @@ WORKDIR /data
 # CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 CMD ["/run.sh"]
 
-# Expose ports.
+WORKDIR /data/services-test/loop/e2e-test
+ENTRYPOINT ["./run.sh loop_fxa_contact_call"]
+
 EXPOSE 5901

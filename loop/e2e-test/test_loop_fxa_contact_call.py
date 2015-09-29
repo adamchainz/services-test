@@ -148,7 +148,7 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         #self.wait_for_element_enabled(button, 120)
         #button.click()
         #time.sleep(5)
-        link = self.marionette.find_element(By.CLASS_NAME, "email")
+        link = self.marionette.find_element(By.CLASS_NAME, "icon-contact-video-call")
         self.wait_for_element_enabled(link, 120)
         link.click()
 
@@ -232,18 +232,16 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         # BROWSER
         self.local_fxa_enter_password()
         time.sleep(6)
-        
-        #self.switch_to_panel2()
+
+        # CHATBOX
         self.switch_to_panel()
         time.sleep(6)
-        #self.local_start_a_conversation()
         self.local_fxa_contacts_tab()
         time.sleep(6)
         self.local_fxa_contacts_add()
         time.sleep(6)
         self.local_fxa_start_a_conversation()
-        time.sleep(3)
-        #self.local_fxa_sign_in()
+        time.sleep(180)
 
     def tearDown(self):
         MarionetteTestCase.tearDown(self)
