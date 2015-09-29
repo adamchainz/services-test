@@ -98,7 +98,8 @@ echo "RUN TEST"
 echo "------------------------------------"
 echo
 
+echo $PATH_MARIONETTE
 # https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
 # http://mozbase.readthedocs.org/en/latest/mozprofile.html
-python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+#python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
 #$PATH_FIREFOX/firefox -P loop-host-MASTER &

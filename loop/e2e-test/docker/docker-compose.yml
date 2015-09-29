@@ -11,4 +11,4 @@ client_host:
   dockerfile: Dockerfile-helper
   container_name: marionette-helper
   ports:
-    - "5902:5902"
+    - "5902:5901"
