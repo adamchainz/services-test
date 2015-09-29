@@ -28,6 +28,17 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         print(self.marionette.page_source)
 
     def switch_to_panel(self):
+        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
+        hello_button = self.marionette.find_element(By.ID, "loop-button")
+        hello_button.click()
+
+        frame = self.marionette.find_element(By.ID, "loop-panel-iframe")
+        self.marionette.switch_to_frame(frame)
+
+    def switch_to_panel2(self):
+        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
+
+        # NEXT: loop-button not found
         hello_button = self.marionette.find_element(By.ID, "loop-button")
         hello_button.click()
 
@@ -97,8 +108,15 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         button.click()
 
     def local_fxa_start_a_conversation(self):
-    #def local_start_a_conversation(self):
+        self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
+        self.marionette.switch_to_frame()
+        time.sleep(5)
+        print('starting a conversation...............')
+        time.sleep(5)
+        # NEXT STEP:
+        # MarionetteException: this.browserForTab is null
         button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
+        print('conversation button found...............')
         self.wait_for_element_enabled(button, 120)
         button.click()
         # contacts.js
@@ -180,9 +198,12 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         self.local_fxa_sign_in()
         time.sleep(3)
         self.local_fxa_enter_password()
-        time.sleep(3)
+        time.sleep(6)
+        self.switch_to_panel2()
+        time.sleep(6)
         self.local_fxa_start_a_conversation()
         time.sleep(3)
+        #self.local_fxa_sign_in()
 
     def tearDown(self):
         MarionetteTestCase.tearDown(self)
