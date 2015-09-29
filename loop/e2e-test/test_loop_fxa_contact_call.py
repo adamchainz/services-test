@@ -110,26 +110,47 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         self.wait_for_element_enabled(button, 120)
         button.click()
 
-    def local_fxa_start_a_conversation(self):
+    def local_fxa_contacts_tab(self):
 
         button = self.marionette.find_element(By.XPATH, './/*[@data-tab-name="contacts"]')
         self.wait_for_element_enabled(button, 120)
         button.click()
-        """
-        self.marionette.set_context(self.marionette.CONTEXT_CONTENT)
+        time.sleep(5)
+        #link = self.marionette.find_element(By.CLASS_NAME, "email")
+        #self.wait_for_element_enabled(link, 120)
+        #link.click()
 
-        self.marionette.switch_to_frame()
-        time.sleep(5)
-        print('starting a conversation...............')
-        time.sleep(5)
-        # NEXT STEP:
-        # MarionetteException: this.browserForTab is null
-        button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
-        print('conversation button found...............')
+    def local_fxa_contacts_add(self):
+
+        #button = self.marionette.find_element(By.CLASS_NAME, "") 
+        #button = self.marionette.find_element(By.CLASS_NAME, "contact-controls") 
+        button = self.marionette.find_element(By.CLASS_NAME, "primary") 
         self.wait_for_element_enabled(button, 120)
-        # contacts.js
-        #onClick: this.handleAction.bind(null, "video-call")}),
-        """
+        button.click()
+        time.sleep(5)
+        button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Name"]')
+        self.wait_for_element_enabled(button, 120)
+        button.send_keys("Johnny Helper")
+        time.sleep(5)
+        button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Email"]')
+        self.wait_for_element_enabled(button, 120)
+        button.send_keys("peter@deseloper.com")
+        time.sleep(5)
+        button = self.marionette.find_element(By.CLASS_NAME, "button-accept") 
+        self.wait_for_element_enabled(button, 120)
+        button.click()
+        time.sleep(5)
+
+    def local_fxa_start_a_conversation(self):
+        # you must first have a contact in your contacts!
+
+        #button = self.marionette.find_element(By.XPATH, './/*[@data-tab-name="contacts"]')
+        #self.wait_for_element_enabled(button, 120)
+        #button.click()
+        #time.sleep(5)
+        link = self.marionette.find_element(By.CLASS_NAME, "email")
+        self.wait_for_element_enabled(link, 120)
+        link.click()
 
     def local_start_a_conversation(self):
         button = self.marionette.find_element(By.CSS_SELECTOR, ".rooms .btn-info")
@@ -210,13 +231,16 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
         # BROWSER
         self.local_fxa_enter_password()
-        print('enter pw now....')
         time.sleep(6)
         
         #self.switch_to_panel2()
         self.switch_to_panel()
         time.sleep(6)
         #self.local_start_a_conversation()
+        self.local_fxa_contacts_tab()
+        time.sleep(6)
+        self.local_fxa_contacts_add()
+        time.sleep(6)
         self.local_fxa_start_a_conversation()
         time.sleep(3)
         #self.local_fxa_sign_in()
