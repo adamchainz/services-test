@@ -124,7 +124,10 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
         #button = self.marionette.find_element(By.CLASS_NAME, "") 
         #button = self.marionette.find_element(By.CLASS_NAME, "contact-controls") 
-        button = self.marionette.find_element(By.CLASS_NAME, "primary") 
+        #button = self.marionette.find_element(By.CLASS_NAME, "primary") 
+        button = self.marionette.find_element(
+            By.XPATH, "//*[text() = 'Add new contact' or text() = 'New Contact']"
+        )
         self.wait_for_element_enabled(button, 120)
         button.click()
         time.sleep(5)
