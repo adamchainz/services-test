@@ -82,6 +82,6 @@ WORKDIR /data
 CMD ["/run.sh"]
 
 WORKDIR /data/services-test/loop/e2e-test
-ENTRYPOINT ["./run.sh loop_fxa_contact_call"]
+ENTRYPOINT ["./run.sh", "loop_fxa_contact_call"]
 
 EXPOSE 5901
