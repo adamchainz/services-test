@@ -134,7 +134,14 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
     def local_fxa_start_a_conversation(self):
         # you must first have a contact in your contacts!
-        link = self.marionette.find_element(By.CLASS_NAME, "icon-contact-video-call")
+        # OSX:    icon-contact-video-call
+        # LINUX:  icon-video-call
+
+        #link = self.marionette.find_element(By.CLASS_NAME, "icon-contact-video-call")
+        link = self.marionette.find_element(
+            By.XPATH, 
+            "//i[contains(@class, 'icon-contact-video-call') or contains(@class, 'icon-video-call')]"
+        )
         self.wait_for_element_enabled(link, 120)
         link.click()
 
