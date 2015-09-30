@@ -7,13 +7,17 @@ from marionette import MarionetteTestCase
 import os
 import sys
 import urlparse
-sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
-
-from config import *
-
 import pyperclip
 import time
 from six.moves import input
+sys.path.insert(1, os.path.dirname(os.path.abspath(__file__)))
+from config import *
+
+MASTER_EMAIL = 'tryloopprod@mailinator.com'
+MASTER_PASSWORD = 'tryloopprod'
+HELPER_NAME = 'Johnny Quest'
+HELPER_EMAIL = 'tryloopprod2@mailinator.com'
+HELPER_PASSWORD = 'tryloopprod2'
 
 
 class TestLoopFxaContactCall(MarionetteTestCase):
@@ -35,19 +39,6 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
         frame = self.marionette.find_element(By.ID, "loop-panel-iframe")
         self.marionette.switch_to_frame(frame)
-
-    """
-    def switch_to_panel2(self):
-
-        self.marionette.set_context(self.marionette.CONTEXT_CHROME)
-        self.marionette.switch_to_frame()
-
-        hello_button = self.marionette.find_element(By.ID, "loop-button")
-        hello_button.click()
-        frame = self.marionette.find_element(By.ID, "loop-panel-iframe")
-        self.marionette.switch_to_frame(frame)
-    """
-
 
     def switch_to_chatbox(self):
         self.marionette.set_context(self.marionette.CONTEXT_CHROME)
@@ -103,7 +94,7 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
         input_box = self.marionette.find_element(By.ID, "password")
         self.wait_for_element_enabled(input_box, 120)
-        input_box.send_keys("tryloopprod")
+        input_box.send_keys(MASTER_PASSWORD)
         time.sleep(3)
         
         button = self.marionette.find_element(By.ID, "submit-btn")
@@ -116,28 +107,25 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         self.wait_for_element_enabled(button, 120)
         button.click()
         time.sleep(5)
-        #link = self.marionette.find_element(By.CLASS_NAME, "email")
-        #self.wait_for_element_enabled(link, 120)
-        #link.click()
 
     def local_fxa_contacts_add(self):
 
-        #button = self.marionette.find_element(By.CLASS_NAME, "") 
-        #button = self.marionette.find_element(By.CLASS_NAME, "contact-controls") 
-        #button = self.marionette.find_element(By.CLASS_NAME, "primary") 
         button = self.marionette.find_element(
             By.XPATH, "//*[text() = 'Add new contact' or text() = 'New Contact']"
         )
         self.wait_for_element_enabled(button, 120)
         button.click()
         time.sleep(5)
-        button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Name"]')
+        #button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Name"]')
+        button = self.marionette.find_element(By.XPATH, './/input[@type="text"]')
         self.wait_for_element_enabled(button, 120)
-        button.send_keys("Johnny Helper")
+        button.send_keys(HELPER_NAME)
         time.sleep(5)
-        button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Email"]')
+        #button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Email"]')
+        button = self.marionette.find_element(By.XPATH, './/input[@type="email"]')
         self.wait_for_element_enabled(button, 120)
-        button.send_keys("peter@deseloper.com")
+        #button.send_keys("peter@deseloper.com")
+        button.send_keys(HELPER_EMAIL)
         time.sleep(5)
         button = self.marionette.find_element(By.CLASS_NAME, "button-accept") 
         self.wait_for_element_enabled(button, 120)
@@ -146,11 +134,6 @@ class TestLoopFxaContactCall(MarionetteTestCase):
 
     def local_fxa_start_a_conversation(self):
         # you must first have a contact in your contacts!
-
-        #button = self.marionette.find_element(By.XPATH, './/*[@data-tab-name="contacts"]')
-        #self.wait_for_element_enabled(button, 120)
-        #button.click()
-        #time.sleep(5)
         link = self.marionette.find_element(By.CLASS_NAME, "icon-contact-video-call")
         self.wait_for_element_enabled(link, 120)
         link.click()
