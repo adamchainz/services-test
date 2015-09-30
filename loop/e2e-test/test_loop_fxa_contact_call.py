@@ -117,19 +117,33 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         button.click()
         time.sleep(5)
         #button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Name"]')
-        button = self.marionette.find_element(By.XPATH, './/input[@type="text"]')
-        self.wait_for_element_enabled(button, 120)
-        button.send_keys(HELPER_NAME)
+        helper_name = self.marionette.find_element(By.XPATH, './/input[@type="text"]')
+        self.wait_for_element_enabled(helper_name, 121)
+        helper_name.send_keys(HELPER_NAME)
         time.sleep(5)
         #button = self.marionette.find_element(By.XPATH, './/*[@placeholder="Email"]')
-        button = self.marionette.find_element(By.XPATH, './/input[@type="email"]')
-        self.wait_for_element_enabled(button, 120)
-        #button.send_keys("peter@deseloper.com")
-        button.send_keys(HELPER_EMAIL)
+        email = self.marionette.find_element(By.XPATH, './/input[@type="email"]')
+        self.wait_for_element_enabled(email, 120)
+        email.send_keys(HELPER_EMAIL)
         time.sleep(5)
-        button = self.marionette.find_element(By.CLASS_NAME, "button-accept") 
-        self.wait_for_element_enabled(button, 120)
-        button.click()
+
+        #By.XPATH, "//*[contains(@class, 'button-accept') or contains(@class, 'button-caption')]"
+        #    By.XPATH, "//button[contains(@class, 'button-accept') or contains(@class, 'button-caption')]"
+        #    By.XPATH, "//*[text() = 'Add new contact' or text() = 'Add Contact']"
+        #self.marionette.switch_to_frame()
+        #button = self.marionette.find_element(By.CLASS_NAME, "button-caption") 
+        #button = self.marionette.find_element(By.XPATH, "//*[text() = 'Add Contact']").click()
+        #self.wait_for_element_enabled(button, 120)
+        #buttons = self.marionette.find_element(By.CLASS_NAME, "button-accept") 
+        buttons = self.marionette.find_elements(By.XPATH, "//*[text() = 'Add Contact']")
+        for button in buttons:
+            self.wait_for_element_enabled(button, 120)
+            button.click()
+            print 'new button found'
+            time.sleep(5)
+
+        #print button
+        #self.click()
         time.sleep(5)
 
     def local_fxa_start_a_conversation(self):
@@ -138,10 +152,16 @@ class TestLoopFxaContactCall(MarionetteTestCase):
         # LINUX:  icon-video-call
 
         #link = self.marionette.find_element(By.CLASS_NAME, "icon-contact-video-call")
+        time.sleep(5)
+
         link = self.marionette.find_element(
             By.XPATH, 
-            "//i[contains(@class, 'icon-contact-video-call') or contains(@class, 'icon-video-call')]"
+            "//*[contains(@class, 'icon-contact-video-call') or contains(@class, 'icon-video')]"
         )
+        #link = self.marionette.find_element(
+        #    By.XPATH, 
+        #    '//li[@data-action="video-call"]'
+        #)
         self.wait_for_element_enabled(link, 120)
         link.click()
 
