@@ -1,20 +1,15 @@
 #
 # Ubuntu Desktop (Gnome) Dockerfile
-#
-# https://github.com/intlabs/Docker-Ubuntu-Desktop-Gnome
+# https://github.com/rpappalax/Docker-Ubuntu-Desktop-Gnome
 #
 
-# Install GNOME3 and VNC server.
-# (c) Pete Birley
-
-# Pull base image.
-#FROM dockerfile/ubuntu
+# BASE IMAGE
 FROM ubuntu:14.04
 
-# Setup enviroment variables
+# ENV VARS 
 ENV DEBIAN_FRONTEND noninteractive
 
-#Update the package manager and upgrade the system
+# PKG MGR UPDATES
 RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get update
@@ -40,28 +35,24 @@ RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/i
 RUN apt-get update && apt-get install -y xorg gnome-core gnome-session-fallback tightvncserver libreoffice git python-virtualenv
 
 # Pull in the hack to fix keyboard shortcut bindings for GNOME 3 under VNC
-ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/gnome-keybindings.pl /usr/local/etc/gnome-keybindings.pl
+ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/gnome-keybindings.pl /usr/local/etc/gnome-keybindings.pl
 RUN chmod +x /usr/local/etc/gnome-keybindings.pl
 
 # Add the script to fix and customise GNOME for docker
-ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/gnome-docker-fix-and-customise.sh /usr/local/etc/gnome-docker-fix-and-customise.sh
+ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/gnome-docker-fix-and-customise.sh /usr/local/etc/gnome-docker-fix-and-customise.sh
 RUN chmod +x /usr/local/etc/gnome-docker-fix-and-customise.sh
 
 # Set up VNC
 RUN mkdir -p /root/.vnc
-ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/xstartup /root/.vnc/xstartup
+ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/xstartup /root/.vnc/xstartup
 RUN chmod 755 /root/.vnc/xstartup
-#ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
-#RUN chmod +x /usr/local/etc/spawn-desktop.sh
 RUN apt-get install -y expect
-ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
+ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
 RUN chmod +x /usr/local/etc/start-vnc-expect-script.sh
-ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/vnc.conf /etc/vnc.conf
+ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/vnc.conf /etc/vnc.conf
 
 WORKDIR /data
 RUN git clone https://github.com/mozilla-services/services-test --branch feature/loop-python 
-#WORKDIR /data/services-test/loop/e2e-test
-#RUN ["./run.sh"]
 
 # Set up supervisord
 ADD start-vncserver.sh /start-vncserver.sh
@@ -78,10 +69,9 @@ VOLUME ["/data"]
 WORKDIR /data
 
 # Define default command.
-# CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 CMD ["/run.sh"]
 
-WORKDIR /data/services-test/loop/e2e-test
-ENTRYPOINT ["./run.sh", "loop_fxa_contact_call"]
+WORKDIR ["/data/services-test/loop/e2e-test"]
+ENTRYPOINT ["/data/services-test/loop/e2e-test/run.sh", "loop_fxa_contact_call"]
 
 EXPOSE 5901
