@@ -13,6 +13,7 @@ build/
 dist/
 sdist/
 marionette_env/
+tmp/
 tests/
 *.egg-info/
 *.egg

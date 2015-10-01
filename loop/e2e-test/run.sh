@@ -1,7 +1,11 @@
 #!/bin/bash
 
 SKIP_INSTALL="$2"
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+#DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
+DIR=`dirname "$0"`; DIR=`eval "cd \"$DIR\" && pwd"`
+echo
+echo "run.sh PATH: $DIR"
+echo
 PATH_MARIONETTE="$DIR/tests/marionette/marionette"
 VENV_NAME="marionette_env"
 #VENV_BIN="$DIR/marionette_env/bin"
@@ -31,8 +35,8 @@ if [ -z "$SKIP_INSTALL" ]; then
     virtualenv "$VENV_NAME"
 fi
 echo "virtualenv is: $DIR/$VENV_NAME"
+echo pwd
 
-#. $DIR/marionette_env/bin/activate 
 . $DIR/$VENV_NAME/bin/activate 
 
 if [ -z "$SKIP_INSTALL" ]; then
