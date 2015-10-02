@@ -103,6 +103,8 @@ echo "------------------------------------"
 echo "RUN TEST"
 echo "------------------------------------"
 echo
+echo "LSOF....is Marionette port taken?"
+lsof -i :2828
 
 # https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
 # http://mozbase.readthedocs.org/en/latest/mozprofile.html
