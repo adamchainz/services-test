@@ -34,7 +34,6 @@ echo
 echo "change to venv directory..."
 cd $DIR
 if [ -z "$SKIP_INSTALL" ]; then
-    #virtualenv marionette_env
     virtualenv "$VENV_NAME"
 fi
 echo "virtualenv is: $DIR/$VENV_NAME"
