@@ -7,9 +7,10 @@ echo
 echo "run.sh PATH: $DIR"
 echo
 PATH_MARIONETTE="$DIR/tests/marionette/marionette"
+echo $PATH_MARIONETTE
 VENV_NAME="marionette_env"
-#VENV_BIN="$DIR/marionette_env/bin"
 VENV_BIN="$DIR/$VENV_NAME/bin"
+MOZDOWNLOAD_VERSION="latest"
 
 if [ -z "$1" ]; then
    # we'll do this by default, but if no arg supplied
@@ -62,7 +63,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
         sudo apt-get install xclip
 
 	echo "DOWNLOAD FIREFOX"
-	$VENV_BIN/mozdownload --version=latest
+	$VENV_BIN/mozdownload --version="$MOZDOWNLOAD_VERSION"
 
 	echo "CLEANUP"
 	rm -rf firefox
@@ -106,5 +107,4 @@ echo
 
 # https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
 # http://mozbase.readthedocs.org/en/latest/mozprofile.html
-/usr/bin/python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
-#$PATH_FIREFOX/firefox -P loop-host-MASTER &
+python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
