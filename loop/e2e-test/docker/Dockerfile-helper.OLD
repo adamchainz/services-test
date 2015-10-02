@@ -1,15 +1,18 @@
 #
 # Ubuntu Desktop (Gnome) Dockerfile
-# https://github.com/rpappalax/Docker-Ubuntu-Desktop-Gnome
-#
+# https://github.com/intlabs/Docker-Ubuntu-Desktop-Gnome
 
-# BASE IMAGE
+# Install GNOME3 and VNC server.
+# (c) Pete Birley
+
+# Pull base image.
+#FROM dockerfile/ubuntu
 FROM ubuntu:14.04
 
-# ENV VARS 
+# Setup enviroment variables
 ENV DEBIAN_FRONTEND noninteractive
 
-# PKG MGR UPDATES
+#Update the package manager and upgrade the system
 RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get update
@@ -46,14 +49,16 @@ RUN chmod +x /usr/local/etc/gnome-docker-fix-and-customise.sh
 RUN mkdir -p /root/.vnc
 ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/xstartup /root/.vnc/xstartup
 RUN chmod 755 /root/.vnc/xstartup
+#ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
+#RUN chmod +x /usr/local/etc/spawn-desktop.sh
 RUN apt-get install -y expect
 ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
-
 RUN chmod +x /usr/local/etc/start-vnc-expect-script.sh
 ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/vnc.conf /etc/vnc.conf
 
 WORKDIR /data
 RUN git clone https://github.com/mozilla-services/services-test --branch feature/loop-python 
+RUN cd services-test; git co feature/loop-python
 
 # Set up supervisord
 ADD start-vncserver.sh /start-vncserver.sh
@@ -62,7 +67,6 @@ ADD run.sh /run.sh
 RUN chmod 755 /*.sh
 ADD supervisord-vncserver.conf /etc/supervisor/conf.d/supervisord-vncserver.conf
 
-
 # Define mountable directories.
 VOLUME ["/data"]
 
@@ -70,7 +74,8 @@ VOLUME ["/data"]
 WORKDIR /data
 
 # Define default command.
+# CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 CMD ["/run.sh"]
 
-
+# Expose ports.
 EXPOSE 5901

@@ -5,8 +5,8 @@ master_host:
   ports:
     - "5901:5901"
   links:
-    - client_host 
-client_host:
+    - helper_host 
+helper_host:
   build: .
   dockerfile: Dockerfile-helper
   container_name: marionette-helper

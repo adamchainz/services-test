@@ -71,7 +71,7 @@ WORKDIR /data
 # Define default command.
 CMD ["/run.sh"]
 
-WORKDIR ["/data/services-test/loop/e2e-test"]
-ENTRYPOINT ["/data/services-test/loop/e2e-test/run.sh", "loop_fxa_contact_call"]
+#WORKDIR ["/data/services-test/loop/e2e-test"]
+RUN ["/data/services-test/loop/e2e-test/run.sh", "loop_fxa_contact_call"]
 
 EXPOSE 5901
