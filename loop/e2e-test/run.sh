@@ -8,7 +8,6 @@ echo "run.sh PATH: $DIR"
 echo
 PATH_MARIONETTE="$DIR/tests/marionette/marionette"
 VENV_NAME="marionette_env"
-#VENV_BIN="$DIR/marionette_env/bin"
 VENV_BIN="$DIR/$VENV_NAME/bin"
 
 if [ -z "$1" ]; then
@@ -33,7 +32,6 @@ echo
 echo "change to venv directory..."
 cd $DIR
 if [ -z "$SKIP_INSTALL" ]; then
-    #virtualenv marionette_env
     virtualenv "$VENV_NAME"
 fi
 echo "virtualenv is: $DIR/$VENV_NAME"
@@ -106,5 +104,4 @@ echo
 
 # https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
 # http://mozbase.readthedocs.org/en/latest/mozprofile.html
-/usr/bin/python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
-#$PATH_FIREFOX/firefox -P loop-host-MASTER &
+python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address="localhost:2828" --type="browser" $PATH_INI 
