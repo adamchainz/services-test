@@ -1,5 +1,7 @@
 #!/bin/bash
 
+MARIONETTE_PORT="8083"
+
 SKIP_INSTALL="$2"
 #DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 DIR=`dirname "$0"`; DIR=`eval "cd \"$DIR\" && pwd"`
@@ -103,9 +105,9 @@ echo "------------------------------------"
 echo "RUN TEST"
 echo "------------------------------------"
 echo
-echo "LSOF....is Marionette port taken?"
-lsof -i :2828
+echo "Running marionette on port: $MARIONETTE_PORT"
 
 # https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
 # http://mozbase.readthedocs.org/en/latest/mozprofile.html
-python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+#python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
+python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address="localhost:$MARIONETTE_PORT" --type=browser $PATH_INI 

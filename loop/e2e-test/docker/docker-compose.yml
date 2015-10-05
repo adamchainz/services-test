@@ -5,6 +5,7 @@ master_host:
   command: /data/services-test/loop/e2e-test/run.sh loop_fxa_contact_call
   ports:
     - "5901:5901"
+    - "8083:8083"
   links:
     - helper_host 
 helper_host:

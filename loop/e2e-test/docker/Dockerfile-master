@@ -70,4 +70,4 @@ WORKDIR /data
 # Define default command.
 CMD ["/run.sh"]
 
-EXPOSE 5901
+EXPOSE 5901 8083
