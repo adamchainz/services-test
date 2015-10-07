@@ -48,7 +48,6 @@ ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/x
 RUN chmod 755 /root/.vnc/xstartup
 RUN apt-get install -y expect
 ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
-
 RUN chmod +x /usr/local/etc/start-vnc-expect-script.sh
 ADD https://raw.githubusercontent.com/rpappalax/Dockerfile-Ubuntu-Gnome/master/vnc.conf /etc/vnc.conf
 
@@ -62,7 +61,6 @@ ADD run.sh /run.sh
 RUN chmod 755 /*.sh
 ADD supervisord-vncserver.conf /etc/supervisor/conf.d/supervisord-vncserver.conf
 
-
 # Define mountable directories.
 VOLUME ["/data"]
 
@@ -71,6 +69,5 @@ WORKDIR /data
 
 # Define default command.
 CMD ["/run.sh"]
-
 
 EXPOSE 5901

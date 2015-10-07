@@ -1,16 +1,13 @@
 master_host:
-  build: . 
-  dockerfile: Dockerfile-master
+  build: ../../_shared/dockerfiles/ubuntu_desktop/
   container_name: marionette-master
   command: /data/services-test/loop/e2e-test/run.sh loop_fxa_contact_call
   ports:
     - "5901:5901"
-    - "8083:8083"
   links:
-    - helper_host 
+    - helper_host
 helper_host:
-  build: .
-  dockerfile: Dockerfile-helper
+  build: ../../_shared/dockerfiles/ubuntu_desktop/
   container_name: marionette-helper
   command: /data/services-test/loop/e2e-test/run.sh loop_fxa_contact_call_helper
   ports:
