@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MARIONETTE_PORT="8083"
+MARIONETTE_PORT="38083"
 
 SKIP_INSTALL="$2"
 #DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
