@@ -1,6 +1,7 @@
 #!/bin/bash
 
-MARIONETTE_PORT="38083"
+HOST_IP=`awk 'NR==1 {print $1}' /etc/hosts`
+MARIONETTE_PORT="2828"
 
 SKIP_INSTALL="$2"
 #DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
@@ -110,4 +111,4 @@ echo "Running marionette on port: $MARIONETTE_PORT"
 # https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/Developer_setup
 # http://mozbase.readthedocs.org/en/latest/mozprofile.html
 #python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address=localhost:2828 --type=browser $PATH_INI 
-python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address="localhost:$MARIONETTE_PORT" --type=browser $PATH_INI 
+python "$PATH_MARIONETTE/runtests.py" --binary="$PATH_FIREFOX/firefox-bin" --address="$HOST_IP:$MARIONETTE_PORT" --type=browser $PATH_INI 
