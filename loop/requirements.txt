@@ -1,3 +1,6 @@
 demjson
-requests
+marionette_client
+marionette_driver
+pyperclip
 pytest
+requests
