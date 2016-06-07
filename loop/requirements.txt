@@ -1,4 +1,5 @@
 demjson
+firefox_puppeteer
 marionette_client
 marionette_driver
 pyperclip
