@@ -2,6 +2,7 @@ from marionette_driver.errors import NoSuchElementException, StaleElementExcepti
 from marionette_driver import By, Wait
 import pyperclip
 import pytest
+import time
 
 
 @pytest.mark.usefixtures('conf', 'env', 'marionette', 'puppeteer')
@@ -31,7 +32,7 @@ class Helpers():
             .until(lambda m: m.find_element(by, locator))
         return self.marionette.find_element(by, locator)
 
-    def wait_for_element_property_to_be_false(self, context, element, property, timeout=10):
+    def wait_for_element_property_to_be_false(self, element, property, timeout=10):
         # XXX We have to switch between get_attribute and get_property here as the
         # content mode now required get_property for real properties of HTMLElements.
         # However, in some places (e.g. switch_to_chatbox), we're still operating in
@@ -39,9 +40,10 @@ class Helpers():
         # Bug 1277065 should fix this for marionette, alternately this should go
         # away when the e10s bug 1254132 is fixed.
         def check_property(m):
-            if context == "content":
+            """
+            if self.context == "content":
                 return not element.get_property(property)
-
+            """
             return element.get_attribute(property) == "false"
 
         Wait(self.marionette, timeout) \
@@ -115,3 +117,19 @@ class Helpers():
         )
 
         chatbox.send_keys(text + "\n")
+
+    def switch_to_chatbox(self):
+        self.set_context("chrome")
+        self.marionette.switch_to_frame()
+
+        contentBox = "content"
+
+        # Added time lapse to allow for DOM to catch up
+        time.sleep(2)
+        # XXX should be using wait_for_element_displayed, but need to wait
+        # for Marionette bug 1094246 to be fixed.
+        chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
+        script = ("return document.getAnonymousElementByAttribute("
+                  "arguments[0], 'anonid', '" + contentBox + "');")
+        frame = self.marionette.execute_script(script, [chatbox])
+        self.marionette.switch_to_frame(frame)

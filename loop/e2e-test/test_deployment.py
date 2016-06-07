@@ -71,12 +71,8 @@ class TestBrowserCall(Helpers):
         video = self.wait_for_element_displayed(
             By.CSS_SELECTOR, ".local-video", 30
         )
-        self.wait_for_element_property_to_be_false(
-            self.context, video, "paused"
-        )
-        self.wait_for_element_property_to_be_false(
-            self.context, video, "ended"
-        )
+        self.wait_for_element_property_to_be_false(video, "paused")
+        self.wait_for_element_property_to_be_false(video, "ended")
 
         # Make sure that the media start time is not initialized
         start_time = self.get_media_start_time()
@@ -100,8 +96,6 @@ class TestBrowserCall(Helpers):
         join_button = self.wait_for_element_displayed(By.CLASS_NAME, "button-got-it")
         self.wait_for_element_enabled(join_button, 120)
         join_button.click()
-
-        self.standalone_load_and_join_room(room_url)
 
         # Check we get the video streams
         self.switch_to_standalone()
@@ -131,30 +125,59 @@ class TestBrowserCall(Helpers):
             ".text-chat-entry.received > p"
         )
         assert text_entry.text == "test2"
-        """
-        # Check text messaging
-        self.check_text_messaging()
 
         # since bi-directional media is connected, make sure we've set
         # the start time
-        self.local_check_media_start_time_initialized()
+        # Make sure that the media start time is not initialized
+        start_time = self.get_media_start_time()
+        unitialized_start_time = self.get_media_start_time_uninitialized()
+        assert start_time != unitialized_start_time
 
         # Check that screenshare was automatically started
-        self.standalone_check_remote_screenshare()
+        self.switch_to_standalone()
+        self.check_video(".screen-share-video")
 
         # We hangup on the remote (standalone) side, because this also leaves
         # the local chatbox with the local publishing media still connected,
         # which means that the local_check_connection_length below
         # verifies that the connection is noted at the time the remote media
         # drops, rather than waiting until the window closes.
-        self.remote_leave_room()
+        self.switch_to_standalone()
+        button = self.marionette.find_element(By.CLASS_NAME, "btn-hangup")
+        button.click()
+        self.switch_to_chatbox()
+        self.wait_for_element_displayed(By.CLASS_NAME, "room-invitation-content")
 
-        self.local_check_connection_length_noted()
+        # Check that we had more than one noted call
+        noted_calls = self.get_chatbox_window_expr(
+            "loop.conversation._sdkDriver._connectionLengthNotedCalls"
+        )
+        assert noted_calls > 0
 
         # Hangup on local will open feedback window first
-        self.local_close_conversation()
-        self.check_feedback_form()
+        self.set_context("chrome")
+        self.marionette.switch_to_frame()
+        chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
+        close_button = chatbox.find_element(By.ANON_ATTRIBUTE, {"class": "chat-loop-hangup chat-toolbarbutton"})
+        close_button.click()
+        self.switch_to_chatbox()
+        feedbackPanel = self.wait_for_element_displayed(
+            By.CSS_SELECTOR, ".feedback-view-container"
+        )
+        assert feedbackPanel != ""
+
         # Close the window once again to see the rename layout
-        self.local_close_conversation()
-        self.check_rename_layout()
-        """
+        self.set_context("chrome")
+        self.marionette.switch_to_frame()
+        chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
+        close_button = chatbox.find_element(By.ANON_ATTRIBUTE, {"class": "chat-loop-hangup chat-toolbarbutton"})
+        close_button.click()
+
+        self.set_context("chrome")
+        frame = self.marionette.find_element(
+            By.ID,
+            "loop-panel-iframe"
+        )
+        self.marionette.switch_to_frame(frame)
+        renameInput = self.wait_for_element_displayed(By.CSS_SELECTOR, ".rename-input")
+        assert renameInput != ""
