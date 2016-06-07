@@ -43,7 +43,7 @@ def test_server_config(conf, env):
     assert json_dict['fxosApp']['name'] == conf.get(env, 'loop_fxos_app_name')
 
 
-def test_server_response(conf, env):
+def test_server_response(conf, env, server_version):
     r = requests.get(conf.get(env, 'loop_server'))
     data = r.json()
 
@@ -54,7 +54,7 @@ def test_server_response(conf, env):
     assert data['homepage'] == conf.get(env, 'homePage')
     assert 'i18n' in data
     assert data['name'] == conf.get(env, 'name')
-    assert data['version'] == conf.get(env, 'loop_server_version')
+    assert data['version'] == server_version
 
 
 def test_push_server_config(conf, env):
