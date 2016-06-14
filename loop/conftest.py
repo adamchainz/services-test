@@ -11,7 +11,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--env",
         action="store",
-        help="choose a test environment: staging or production"
+        help="choose a test environment: stage or prod"
     )
     parser.addoption(
         "--bin",

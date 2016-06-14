@@ -35,12 +35,16 @@ Tests in this directory are designed to test UI features of Loop. They require
 the use of Firefox with Marionette support built-in, which is Firefox 46 and
 above.
 
+These tests are currently designed to be run manually. Development work was
+done on Mac OS-X El Capitan so the location of the browser in the configuration
+file will need to change.
+
 The tests are using [pytest](http://pytest.org/latest/) so to run them do the
 following:
 
 `py.test -v --env=<environment> e2e-test/`
 
-where `<environemt>` is one of `staging` or `production`.
+where `<environemt>` is one of `stage` or `prod`.
 
 The tests start up a Firefox browser and run some automated tests. There might
 be a manual step of telling the browser you wish to share your camera and
