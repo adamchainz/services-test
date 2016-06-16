@@ -14,12 +14,15 @@ class TestBrowserCall(Helpers):
         self.marionette = marionette
         self.marionette.set_context("chrome")
         self.puppeteer = puppeteer
-        Helpers.setUp(self, self.conf, self.env, self.marionette, self.puppeteer)
+        Helpers.setUp(
+            self, self.conf, self.env, self.marionette, self.puppeteer
+        )
         self.firefox_preferences = {
             "loop.server": "%s/v0" % self.conf.get(env, 'loop_server'),
             "loop.linkClicker.url": "https://invalid/",
             "loop.gettingStarted.latestFTUVersion": 2,
             "loop.remote.autostart": True,
+            "media.navigator.permission.disabled": True,
         }
 
     def test_browser_call(self):
@@ -93,7 +96,9 @@ class TestBrowserCall(Helpers):
 
         # Join the room - the first time around, the tour will be displayed
         # so we look for its close button.
-        join_button = self.wait_for_element_displayed(By.CLASS_NAME, "button-got-it")
+        join_button = self.wait_for_element_displayed(
+            By.CLASS_NAME, "button-got-it"
+        )
         self.wait_for_element_enabled(join_button, 120)
         join_button.click()
 
@@ -146,7 +151,9 @@ class TestBrowserCall(Helpers):
         button = self.marionette.find_element(By.CLASS_NAME, "btn-hangup")
         button.click()
         self.switch_to_chatbox()
-        self.wait_for_element_displayed(By.CLASS_NAME, "room-invitation-content")
+        self.wait_for_element_displayed(
+            By.CLASS_NAME, "room-invitation-content"
+        )
 
         # Check that we had more than one noted call
         noted_calls = self.get_chatbox_window_expr(
@@ -158,7 +165,10 @@ class TestBrowserCall(Helpers):
         self.set_context("chrome")
         self.marionette.switch_to_frame()
         chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
-        close_button = chatbox.find_element(By.ANON_ATTRIBUTE, {"class": "chat-loop-hangup chat-toolbarbutton"})
+        close_button = chatbox.find_element(
+            By.ANON_ATTRIBUTE,
+            {"class": "chat-loop-hangup chat-toolbarbutton"}
+        )
         close_button.click()
         self.switch_to_chatbox()
         feedbackPanel = self.wait_for_element_displayed(
@@ -170,7 +180,10 @@ class TestBrowserCall(Helpers):
         self.set_context("chrome")
         self.marionette.switch_to_frame()
         chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
-        close_button = chatbox.find_element(By.ANON_ATTRIBUTE, {"class": "chat-loop-hangup chat-toolbarbutton"})
+        close_button = chatbox.find_element(
+            By.ANON_ATTRIBUTE,
+            {"class": "chat-loop-hangup chat-toolbarbutton"}
+        )
         close_button.click()
 
         self.set_context("chrome")
@@ -179,5 +192,7 @@ class TestBrowserCall(Helpers):
             "loop-panel-iframe"
         )
         self.marionette.switch_to_frame(frame)
-        renameInput = self.wait_for_element_displayed(By.CSS_SELECTOR, ".rename-input")
+        renameInput = self.wait_for_element_displayed(
+            By.CSS_SELECTOR, ".rename-input"
+        )
         assert renameInput != ""
