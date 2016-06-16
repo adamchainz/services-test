@@ -23,7 +23,7 @@ results are compared to known expected values.
 The tests are using [pytest](http://pytest.org/latest/) so to run them do the
 following:
 
-`py.test -v --env=<environment> --server=version=<version> config-check/`
+`py.test -v -s --env=<environment> --server=version=<version> config-check/`
 
 Where `<environment>` is `staging` or `production` and `<version>` is the
 version of loop server that is deployed to the environment you are testing

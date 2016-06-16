@@ -27,6 +27,7 @@ class TestBrowserCall(Helpers):
 
     def test_browser_call(self):
         # Load the home page and set some preferences
+        print("\n")
         self.set_context('content')
         self.marionette.navigate("about:home")
         self.marionette.set_prefs(self.firefox_preferences)
@@ -69,6 +70,7 @@ class TestBrowserCall(Helpers):
         media_container = self.wait_for_element_displayed(
             By.CLASS_NAME, "media-layout"
         )
+        print("Checking for video container")
         assert media_container.tag_name == "div"
 
         video = self.wait_for_element_displayed(
@@ -80,6 +82,7 @@ class TestBrowserCall(Helpers):
         # Make sure that the media start time is not initialized
         start_time = self.get_media_start_time()
         unitialized_start_time = self.get_media_start_time_uninitialized()
+        print("Making sure media start time is correct")
         assert start_time == unitialized_start_time
 
         chatbox = self.wait_for_element_exists(By.TAG_NAME, 'chatbox')
@@ -88,6 +91,7 @@ class TestBrowserCall(Helpers):
         frame = self.marionette.execute_script(script, [chatbox])
         self.marionette.switch_to_frame(frame)
         room_url = self.get_and_verify_room_url()
+        print("Make sure room URL is correctly formed")
         assert urlparse.urlparse(room_url).scheme in ['http', 'https']
 
         # load the link clicker interface into the current content browser
@@ -118,6 +122,7 @@ class TestBrowserCall(Helpers):
             By.CSS_SELECTOR,
             ".text-chat-entry.received > p"
         )
+        print("Sending message 'test1'")
         assert text_entry.text == "test1"
 
         # Then send a message using the standalone.
@@ -129,6 +134,7 @@ class TestBrowserCall(Helpers):
             By.CSS_SELECTOR,
             ".text-chat-entry.received > p"
         )
+        print("Checking for 'test2' getting sent")
         assert text_entry.text == "test2"
 
         # since bi-directional media is connected, make sure we've set
@@ -136,6 +142,7 @@ class TestBrowserCall(Helpers):
         # Make sure that the media start time is not initialized
         start_time = self.get_media_start_time()
         unitialized_start_time = self.get_media_start_time_uninitialized()
+        print("Make sure media start time was not reset")
         assert start_time != unitialized_start_time
 
         # Check that screenshare was automatically started
@@ -159,6 +166,7 @@ class TestBrowserCall(Helpers):
         noted_calls = self.get_chatbox_window_expr(
             "loop.conversation._sdkDriver._connectionLengthNotedCalls"
         )
+        print("Check that we had more than one noted call")
         assert noted_calls > 0
 
         # Hangup on local will open feedback window first
@@ -174,6 +182,7 @@ class TestBrowserCall(Helpers):
         feedbackPanel = self.wait_for_element_displayed(
             By.CSS_SELECTOR, ".feedback-view-container"
         )
+        print("Checking that feedback panel is visible")
         assert feedbackPanel != ""
 
         # Close the window once again to see the rename layout
@@ -195,4 +204,5 @@ class TestBrowserCall(Helpers):
         renameInput = self.wait_for_element_displayed(
             By.CSS_SELECTOR, ".rename-input"
         )
+        print("Check that rename input element is visible")
         assert renameInput != ""
